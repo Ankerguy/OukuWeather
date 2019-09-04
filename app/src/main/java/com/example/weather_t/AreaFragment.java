@@ -1,6 +1,7 @@
 package com.example.weather_t;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import com.example.weather_t.db.City;
 import com.example.weather_t.db.County;
 import com.example.weather_t.db.Province;
+import com.example.weather_t.gson.Weather;
 import com.example.weather_t.util.HttpUtil;
 import com.example.weather_t.util.Utilty;
 
@@ -77,6 +79,12 @@ public class AreaFragment extends Fragment {
                 } else if (currentLevel == LEVEL_CITY) {
                     selectedCity = cityList.get(position);
                     queryCounties();
+                } else if (currentLevel == LEVEL_COUNTRY) {
+                    String weatherId = countyList.get(position).getWeatherId();
+                    Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                    intent.putExtra("weather_id", weatherId);
+                    startActivity(intent);
+                    getActivity().finish();
                 }
             }
         });
@@ -145,7 +153,7 @@ public class AreaFragment extends Fragment {
         } else {
             int provinceCode = selectedProvince.getProvinceCode();
             int cityCode = selectedCity.getCityCode();
-            String address = "http://guolin.tech/api/china/"+provinceCode+"/"+cityCode;
+            String address = "http://guolin.tech/api/china/" + provinceCode + "/" + cityCode;
             queryFromServer(address, "county");
         }
     }
